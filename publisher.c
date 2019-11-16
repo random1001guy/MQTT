@@ -1,14 +1,12 @@
 #include "header.h"
 
 #define CLIENT_ID 1
+#define PATH_LOG "publisher.log"
 
 int send_master(int sock, master t1);
 
+int get_max_msgid(int sockfd, master t1);
 
-void DieWithError(char *message){
-    perror(message);
-    exit(1);
-}
 
 FILE *fptr;
 
@@ -131,7 +129,7 @@ int main(int argc, char *argv[]){
             int count = 0;
             c=fgetc(fptr);
             while(c != EOF){
-
+                
             }
 
 
@@ -150,13 +148,7 @@ int main(int argc, char *argv[]){
 
 
 
-int send_master(int sock, master t1){
-   
-    if (write(sock, &t1 , sizeof(t1)) == -1)
-        DieWithError("send() sent a different number of bytes than expected");
-    
 
-}
 
 
 int get_max_msgid(int sockfd, master t1){

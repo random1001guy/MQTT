@@ -6,7 +6,7 @@
 # include<sys/socket.h>
 # include<arpa/inet.h>
 
-#define PATH_LOG "publisher.log"
+
 #define PORT 1900 
 #define RCVBUFSIZE 32
 #define MAX_TOPIC_SIZE 32
@@ -37,6 +37,31 @@ void DieWithError(char *message){
     exit(1);
 }
 
+int send_master(int sock, master t1){
+   
+    if (write(sock, &t1 , sizeof(t1)) == -1)
+        DieWithError("write()");
+    
+
+}
+
+void display(master mstr,int a1,int a2,int a3,int a4,int a5,int a6){
+
+	if(a1)
+		printf("Message type : %d\n",mstr.type);
+	if(a4)
+		printf("Message ID : %d\n",mstr.msg_id);
+	if(a3)
+		printf("Topic Name : %s\n",mstr.topic_name);
+	if(a2)
+		printf("Message content : %s\n",mstr.message);
+	if(a5)
+		printf("Client ID : %d\n",mstr.client_id);
+	if(a6)
+		printf("Broker ID : %d\n",mstr.broker_id);
+
+	return;
+}
 
 
 
