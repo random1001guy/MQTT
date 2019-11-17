@@ -7,7 +7,7 @@
 # include<arpa/inet.h>
 
 
-#define PORT 1900 
+
 #define RCVBUFSIZE 32
 #define MAX_TOPIC_SIZE 32
 #define MAX_MESSAGE_SIZE 512

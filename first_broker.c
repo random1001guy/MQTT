@@ -27,7 +27,7 @@ int listenfd;
 topic_item *head;
 
 
-void connect_to_neighbour(char **argv);
+void connect_to_neighbour(char *ip1,int port1);
 void let_neighbour_connect();
 void foo();
 void handle_data(master mstr);
@@ -36,12 +36,11 @@ void get_max_msgid_broker_file(master *mstr);
 void create_message_file(master mstr);
 
 
+
+
 int main(int argc, char *argv[]){
 
-    if(argc!=3){
-        printf("Usage : ./broker <NeighbourBroker_IP> <NeighbourBroker_Port>\n");
-        exit(0);
-    }
+
     
     printf("Please enter my broker ID : ");
     scanf("%d",&myBrokerID);
@@ -54,14 +53,22 @@ int main(int argc, char *argv[]){
 	fprintf(fptr, "Broker %d started. Connected to Broker with IP : %s Port %s\n",myBrokerID,argv[1],argv[2]);
 
 	head=NULL;
-
-    connect_to_neighbour(argv);
+    char ip1[50];
+    int port1;
+    
     let_neighbour_connect();
+
+    printf("Enter IP of neighbour I should connect to: ");
+    scanf("%s",ip1);
+    printf("Enter port no. of neighbour I should connect to: ");
+    scanf("%d",&port1);
+
+    connect_to_neighbour(ip1,port1);
     foo();
 
 }
 
-void connect_to_neighbour(char **argv){
+void connect_to_neighbour(char *ip1,int port1){
 
 	struct sockaddr_in server;
 
@@ -73,8 +80,8 @@ void connect_to_neighbour(char **argv){
 
 	bzero(&server,sizeof(server));
 	server.sin_family= AF_INET;
-	server.sin_port=htons(atoi(argv[2]));
-	inet_pton(AF_INET, argv[1], &server.sin_addr);
+	server.sin_port=htons(port1);
+	inet_pton(AF_INET, ip1, &server.sin_addr);
 
 	if(connect(to_neighbour_sockfd, (SA *) &server, sizeof(server))==-1)
 		DieWithError("connect to broker");
@@ -135,9 +142,9 @@ void foo(){
 	FD_ZERO(&superset);
 	FD_ZERO(&rset);
 	FD_SET(listenfd,&superset);
-	FD_SET(from_neighbour_sockfd,&superset);
+    FD_SET(from_neighbour_sockfd,&superset);
 	maxfd = listenfd;
-	maxfd = from_neighbour_sockfd > maxfd ? from_neighbour_sockfd : maxfd;
+    maxfd = from_neighbour_sockfd > maxfd ? from_neighbour_sockfd : maxfd;
 
 
 
@@ -146,7 +153,7 @@ void foo(){
 
 
 		rset = superset;
-		printf("\nCalling select()\n\n");
+        printf("Calling select()\n");
 		if(select(maxfd+1, &rset, NULL, NULL, NULL) == -1)
 			DieWithError("select() failed");
 
@@ -187,9 +194,9 @@ void foo(){
 
 
 					else{										
-						if(i != from_neighbour_sockfd)
-							mstr.client_id = i;
-						printf("\n\nIn foo, after select() returned. About to Call handle_data\n. The struct I received is = \n\n");
+                        if(i != from_neighbour_sockfd)
+						    mstr.client_id = i;
+                        printf("\n\nIn foo, after select() returned. About to Call handle_data\n. The struct I received is = \n\n");
                         display(mstr,1,1,1,1,1,1);
 						handle_data(mstr);
 
@@ -349,6 +356,7 @@ void handle_data(master mstr){
 
 	}	//endswitch
 }
+
 
 
 // int get_message_file(master *mstr){
@@ -520,6 +528,7 @@ void handle_data(master mstr){
 // }
 
 
+
 int get_message_file(master *mstr){
 
     FILE *fptr;
@@ -582,7 +591,7 @@ void create_message_file(master mstr){
     strcpy(file_name, mstr.topic_name);
     strcat(file_name, ".");
     sprintf(file_name, "%s%d", file_name, mstr.msg_id);
-	printf("\n\n%s\n\n", file_name);
+    printf("\n\n%s\n\n", file_name);
     if((fptr = fopen(file_name, "w")) == NULL){
         printf("\nerror while creating message file\n");
 		//fclose(fptr);
@@ -591,8 +600,7 @@ void create_message_file(master mstr){
     }
 
     fprintf(fptr, "%s", mstr.message);
-	fclose(fptr);
-
+    fclose(fptr);
     if((fptr = fopen(mstr.topic_name, "w")) == NULL){
         printf("\nerror while opening topic file for updatign msgid\n");
     }
@@ -602,4 +610,3 @@ void create_message_file(master mstr){
     return;
 
 }
-
