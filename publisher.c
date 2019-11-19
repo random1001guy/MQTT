@@ -71,7 +71,6 @@ int main(int argc, char *argv[]){
                 t1.broker_id = -1;
                 send_master(sock, t1);
             }         
-            //send_master(sock, t1);
           
     }
 
@@ -99,7 +98,6 @@ int main(int argc, char *argv[]){
                 t1.broker_id = -1;
                 send_master(sock, t1);
             }
-            //send_master(sock, t1);
         
         
     }
@@ -136,15 +134,8 @@ int main(int argc, char *argv[]){
     close(sock);
     exit(0);
 
-    //fprintf(fptr,"socket created successfully\n");
     
 }
-
-
-
-
-
-
 
 int get_max_msgid(int sockfd, master t1){
 

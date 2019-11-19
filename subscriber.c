@@ -38,7 +38,7 @@ int main(int argc,char *argv[]){
 
 	establish_conn(argv);
 	node = NULL;
-	//node->next==NULL;
+
 
 	foo();
 
@@ -52,11 +52,9 @@ void foo(){
 	
 		int c;
 		printf("->Enter 1 to subscribe to a topic\n->Enter 2 to retrieve a message\n->");
-		//fflush(stdin);
-        //getc(stdin);
+
         scanf("%d",&c);
-        //getc(stdin);
-       // getc(&c);
+
 
 		switch(c){
 			
@@ -71,7 +69,7 @@ void foo(){
 
 		}
 
-		//printf("\n");
+
 	}
 
 }
@@ -103,7 +101,7 @@ void subscribe_topic(){
 
 	printf("\n\t->Enter topic name : ");
 	scanf("%s",mstr.topic_name);
-    //fflush(stdin);
+
     
 
 	if(is_subscribed(&mstr) == 1){
@@ -114,12 +112,11 @@ void subscribe_topic(){
     FILE *fptr;
     char *file_name = (char *)malloc(strlen(mstr.topic_name) + 1);
     strcpy(file_name, mstr.topic_name);
-    //strcat(file_name, ".");
-    //sprintf(file_name, "%s%d", file_name, mstr.msg_id);
+
     printf("\n\n%s\n\n", file_name);
     if((fptr = fopen(file_name, "w")) == NULL){
         printf("\nerror while creating message file\n");
-		//fclose(fptr);
+		
         return;
     }
     fprintf(fptr, "%d",0);
@@ -192,12 +189,10 @@ void get_next_message(master *mstr){
     FILE *fptr;
     char *file_name = (char *)malloc(strlen(mstr->topic_name) + 1);
     strcpy(file_name, mstr->topic_name);
-    //strcat(file_name, ".");
-    //sprintf(file_name, "%s%d", file_name, mstr.msg_id);
-    //printf("\n\n%s\n\n", file_name);
+
     if((fptr = fopen(file_name, "w")) == NULL){
         printf("\nerror. means topic not subscribed\n");
-		//fclose(fptr);
+		
         return;
     }
     fprintf(fptr,"%d",(reply_struct.msg_id));
@@ -234,12 +229,10 @@ void get_all_message(master *mstr){
     FILE *fptr;
     char *file_name = (char *)malloc(strlen(mstr->topic_name) + 1);
     strcpy(file_name, mstr->topic_name);
-    //strcat(file_name, ".");
-    //sprintf(file_name, "%s%d", file_name, mstr.msg_id);
-    //printf("\n\n%s\n\n", file_name);
+
     if((fptr = fopen(file_name, "w")) == NULL){
         printf("\nerror opening file in get_all_messages\n");
-		//fclose(fptr);
+		
         return;
     }
     fprintf(fptr,"%d",(mstr->msg_id));
@@ -254,12 +247,10 @@ int is_subscribed(master *mstr){
 	FILE *fptr;
     char *file_name = (char *)malloc(strlen(mstr->topic_name) + 1);
     strcpy(file_name, mstr->topic_name);
-    //strcat(file_name, ".");
-    //sprintf(file_name, "%s%d", file_name, mstr.msg_id);
-    //printf("\n\n%s\n\n", file_name);
+
     if((fptr = fopen(file_name, "r")) == NULL){
         printf("\nerror. means topic not subscribed\n");
-		//fclose(fptr);
+		
         return 0;
     }
     fscanf(fptr,"%d",&(mstr->msg_id));
@@ -275,7 +266,7 @@ int get_max_msgid(int sockfd, master t1){
     display(t1,1,1,1,1,1,1);
     if (write(sockfd, &t1 , sizeof(t1)) == -1)
         DieWithError("send() sent a different number of bytes than expected");
-    //printf("REVD r")
+    
     master reply_struct;
     
     if(read(sockfd, &reply_struct, sizeof(reply_struct)) < 0)
@@ -285,11 +276,3 @@ int get_max_msgid(int sockfd, master t1){
     return reply_struct.msg_id;
 }
 
-/*
-void update_msgid(char *topic_name){
-
-}
-
-void is_subscribed_file(char *topic_name){
-
-}*/

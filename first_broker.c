@@ -221,22 +221,15 @@ void handle_data(master mstr){
 			
 			if(mstr.broker_id == myBrokerID){
 				
-				//pid = fork();
-				//if(pid == 0){
+
 					mstr.type = RPL_MAX_MSGID;
 					printf("\n\nIn case GET_MAX_MSGID. mstr.broker_id == myBrokerID. About to send data to client. The struct is =\n");
 					display(mstr,1,1,1,1,1,1);
 					send_master(mstr.client_id, mstr);
-					
-				//	exit(0);
-				//}
-				//else 
+
 					return;
 			}
 			else{
-				
-				// pid = fork();
-			//	if(pid == 0){
 					if(mstr.broker_id == -1)
 						mstr.broker_id = myBrokerID;
 					
@@ -244,9 +237,7 @@ void handle_data(master mstr){
 					printf("Sending to my neighbour\n");
 					send_master(to_neighbour_sockfd, mstr);
 					printf("GET_MAX_MSGID sent to my neighbour\n");
-				//	exit(0);
-				//}
-				//else 
+
 					return;
 
 			}
@@ -264,8 +255,7 @@ void handle_data(master mstr){
 		case GET_MSG: 
 			printf("\n\nIn case GET_MSG. The struct is =\n");
 			display(mstr,1,1,1,1,1,1);
-			//pid = fork();
-			//if(pid == 0){
+
 			
 				if(mstr.broker_id == myBrokerID){	
 						printf("\n\nIn case get_msg, mstr.broker_id == myBrokerID.About to send data to client .The struct is =\n");
@@ -273,7 +263,6 @@ void handle_data(master mstr){
 						send_master(mstr.client_id, mstr);
 						fprintf(fptr,"GET_MSG sent to client %d\n",mstr.client_id);
 						return;
-						//exit(0);
 				}
 				else if(mstr.broker_id == -1){
 					
@@ -286,7 +275,6 @@ void handle_data(master mstr){
 						send_master(mstr.client_id, mstr);
 						fprintf(fptr,"get_msg MSG_RETRIEVED sent to client %d\n",mstr.client_id);
 						return;
-						//exit(0);
 					}
 					else{
 						printf("\n\nIn case get_msg, mstr.broker_id == -1 and NOT OF MSG_RETRIEVED.About to send data to neighbour .The struct is =\n");
@@ -294,7 +282,6 @@ void handle_data(master mstr){
 						send_master(to_neighbour_sockfd, mstr);
 						fprintf(fptr,"GET_MSG sent to my neighbour broker\n");
 						return;
-						//exit(0);
 					}
 				}
 				else{
@@ -306,18 +293,14 @@ void handle_data(master mstr){
 						display(mstr,1,1,1,1,1,1);
 						send_master(to_neighbour_sockfd, mstr);
 						fprintf(fptr,"MSG_RETRIEVED sent to my neighbour broker\n");
-						//exit(0);
 					}
 					else{
 						printf("\n\nIn case get_msg, mstr.broker_id IS NOT MY BROKER ID AND ALSO NOT -1 and NOT OF MSG_RETRIEVED.About to send data to client .The struct is =\n");
 						display(mstr,1,1,1,1,1,1);
 						send_master(to_neighbour_sockfd, mstr);
 						fprintf(fptr,"GET_MSG sent to my neighbour broker\n");
-						//exit(0);
 					}
-				}
-			//}
-			//else 
+				} 
 				return;
 
 			break;
@@ -326,15 +309,14 @@ void handle_data(master mstr){
 
 		case MSG_RETRIEVED: 
 			display(mstr,1,1,1,1,1,1);
-			//pid =fork();
-			//if(pid ==0){
+
 				if(mstr.broker_id == myBrokerID){
 						printf("\n\nIn case MSG_RETRIEVED, mstr.broker_id == myBrokerID .About to send data to client .The struct is =\n");
 						display(mstr,1,1,1,1,1,1);
 					send_master(mstr.client_id, mstr);
 					fprintf(fptr,"MSG_RETRIEVED sent to client %d\n",mstr.client_id);
 					return;
-					//exit(0);
+
 				}
 				else{
 					printf("\n\nIn case MSG_RETRIEVED, mstr.broker_id is not my brokerID .About to send data to client .The struct is =\n");
@@ -342,10 +324,9 @@ void handle_data(master mstr){
 					send_master(to_neighbour_sockfd, mstr);
 					fprintf(fptr,"MSG_RETRIEVED sent to my neighbour broker\n");
 					return;
-					//exit(0);
+
 				}
-			//}
-			//else 
+
 				return;
 			break;
 
@@ -537,16 +518,16 @@ int get_message_file(master *mstr){
     char msgid_str[50];
     strcpy(file_name, mstr->topic_name);
     strcat(file_name, ".");
-    // itoa(mstr->msg_id, msgid_str, )
+    
     sprintf(file_name, "%s%d", file_name, mstr->msg_id);
-    //strcat(file_name, (char *)itoa(mstr->msg_id));
+    
     printf("\n%s\n%d", file_name, strlen(file_name));
 
 
     fptr = fopen(file_name, "r");
     if(fptr == NULL){
         printf("\nfile does not exist\n");
-		fclose(fptr);
+		//fclose(fptr);
         return 0;
     }
     char message[MAX_MESSAGE_SIZE];
@@ -564,7 +545,7 @@ void get_max_msgid_broker_file(master *mstr){
 
     if((fptr = fopen(mstr->topic_name, "r")) == NULL){
         printf("topic file does not exist");
-		//fclose(fptr);
+		
         return;
     }
 
@@ -594,7 +575,7 @@ void create_message_file(master mstr){
     printf("\n\n%s\n\n", file_name);
     if((fptr = fopen(file_name, "w")) == NULL){
         printf("\nerror while creating message file\n");
-		//fclose(fptr);
+		
 
         return;
     }
